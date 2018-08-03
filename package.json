@@ -1,0 +1,53 @@
+{
+  "name": "express-slick-css",
+  "version": "1.0.0",
+  "description": "An express middleware which cleans all the unused css in the template and makes the css slick",
+  "scripts": {
+    "test": "jest __tests__",
+    "test:watch": "jest --watch",
+    "coverage": "jest --coverage",
+    "lint": "eslint \"**/*.js\" --fix",
+    "lint:staged": "eslint --fix",
+    "pretty": "prettier --write",
+    "precommit": "lint-staged",
+    "prepush": "npm run test"
+  },
+  "lint-staged": {
+    "**/*.{md,json}": [
+      "npm run pretty",
+      "git add"
+    ],
+    "**/*.js": [
+      "npm run pretty",
+      "npm run test",
+      "npm run lint:staged",
+      "git add"
+    ]
+  },
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ameerthehacker/express-slick-css.git"
+  },
+  "keywords": [
+    "css",
+    "express",
+    "clean-css"
+  ],
+  "author": "ameerthehacker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ameerthehacker/express-slick-css/issues"
+  },
+  "homepage": "https://github.com/ameerthehacker/express-slick-css#readme",
+  "devDependencies": {
+    "eslint": "^5.2.0",
+    "husky": "^0.14.3",
+    "jest": "^23.4.2",
+    "lint-staged": "^7.2.0",
+    "prettier": "^1.14.0"
+  }
+}
