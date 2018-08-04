@@ -20,37 +20,85 @@ describe('file-manager.js', () => {
     `;
   });
 
-  it('should return true if file exists', () => {
-    const fileName = path.join(options.cssPath, `${contentHash}.css`);
+  describe('exists()', () => {
+    it('should return true if file exists', () => {
+      const fileName = path.join(options.cssPath, `${contentHash}.css`);
 
-    fs.existsSync = jest.fn().mockImplementation((path) => {
-      if (path === fileName) {
-        return true;
-      } else {
-        return false;
-      }
+      fs.existsSync = jest.fn().mockImplementation((path) => {
+        if (path === fileName) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+      expect(fileManager.exists(fileContent)).toBeTruthy();
     });
 
-    expect(fileManager.exists(fileContent)).toBeTruthy();
+    it('should return false with error if file does not exists', () => {
+      fs.existsSync = jest.fn().mockReturnValue(false);
+
+      expect(fileManager.exists(fileContent)).toBeFalsy();
+    });
   });
 
-  it('should return false with error if file does not exists', () => {
-    fs.existsSync = jest.fn().mockReturnValue(false);
+  describe('getFilePath()', () => {
+    it('should fail with error when cssPath is not given', () => {
+      options.cssPath = undefined;
 
-    expect(fileManager.exists(fileContent)).toBeFalsy();
+      expect(fileManager.getFilePath(fileContent)).toBeUndefined();
+      expect(options.errorFn).toBeCalled();
+    });
+
+    it('should fail with error when hashFn is not given', () => {
+      options.hashFn = undefined;
+
+      expect(fileManager.getFilePath(fileContent)).toBeUndefined();
+      expect(options.errorFn).toBeCalled();
+    });
+
+    it('should return the correct path', () => {
+      const filePath = path.join(options.cssPath, `${contentHash}.css`);
+
+      expect(fileManager.getFilePath(fileContent)).toBe(filePath);
+    });
   });
 
-  it('should fail with error when cssPath is not given', () => {
-    options.cssPath = undefined;
+  describe('write()', () => {
+    beforeEach(() => {
+      fs.writeFileSync = jest.fn();
+    });
 
-    expect(fileManager.exists(fileContent)).toBeUndefined();
-    expect(options.errorFn).toBeCalled();
-  });
+    it('should call getFilePath() with fileContent', () => {
+      fileManager.getFilePath = jest.fn();
 
-  it('should fail with when hashFn is not given', () => {
-    options.hashFn = undefined;
+      fileManager.write(fileContent);
 
-    expect(fileManager.exists(fileContent)).toBeUndefined();
-    expect(options.errorFn).toBeCalled();
+      expect(fileManager.getFilePath).toBeCalledWith(fileContent);
+    });
+
+    it('should call exists() with fileContent', () => {
+      fileManager.exists = jest.fn();
+
+      fileManager.write(fileContent);
+
+      expect(fileManager.exists).toBeCalledWith(fileContent);
+    });
+
+    it('should not call fs.fileWriteSync() when file exists', () => {
+      fileManager.exists = jest.fn().mockReturnValue(true);
+
+      fileManager.write(fileContent);
+
+      expect(fs.writeFileSync).not.toBeCalled();
+    });
+
+    it('should call fs.fileWriteSync() when file does not exists', () => {
+      fileManager.exists = jest.fn().mockReturnValue(false);
+
+      fileManager.write(fileContent);
+
+      expect(fs.writeFileSync).toBeCalled();
+    });
   });
 });

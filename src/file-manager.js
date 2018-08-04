@@ -6,7 +6,7 @@ class FileManager {
     this.options = options;
   }
 
-  exists(fileContent) {
+  getFilePath(fileContent) {
     const { cssPath, hashAlgo, hashFn, errorFn } = this.options;
 
     if (cssPath === undefined) {
@@ -20,10 +20,23 @@ class FileManager {
 
       return;
     }
-
     const contentHash = hashFn(fileContent, hashAlgo);
 
-    return fs.existsSync(path.join(cssPath, `${contentHash}.css`));
+    return path.join(cssPath, `${contentHash}.css`);
+  }
+
+  exists(fileContent) {
+    return fs.existsSync(this.getFilePath(fileContent));
+  }
+
+  write(fileContent) {
+    const filePath = this.getFilePath(fileContent);
+
+    if (!this.exists(fileContent)) {
+      fs.writeFileSync(filePath, fileContent, { flag: 'wx' });
+    }
+
+    return filePath;
   }
 }
 
