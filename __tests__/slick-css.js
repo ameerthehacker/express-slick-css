@@ -1,5 +1,3 @@
-let uncss = require('uncss');
-let { error } = require('../src/util');
 let { JSDOM } = require('jsdom');
 const SlickCSS = require('../src/slick-css');
 const path = require('path');
@@ -12,10 +10,13 @@ describe('slick-css.js', () => {
   beforeEach(() => {
     options = {
       uncssOptions: {},
-      uncssFn: uncss,
-      errorFn: error,
+      uncssFn: {},
+      errorFn: {},
       cssPath: 'css',
-      publicPath: '/'
+      publicPath: '/',
+      fileManager: {
+        write() {}
+      }
     };
     slickCSS = new SlickCSS(options);
     htmlContent = `
@@ -170,6 +171,46 @@ describe('slick-css.js', () => {
         expect(setAttributeMock.mock.calls[1][1]).toBe('stylesheet');
         // Check if link element is appended properly
         expect(appendChildMock).toBeCalledWith(createElementReturnValue);
+      });
+    });
+  });
+
+  describe('saveSlickCSS()', () => {
+    it('should call slickify() with htmlContent, fileManager.write() with styles', () => {
+      const usedStyles = `
+      .style1 {
+        color: white;
+      }
+      `;
+      const slickifyMock = (slickCSS.slickify = jest
+        .fn()
+        .mockResolvedValue(usedStyles));
+      const fileManagerMock = (slickCSS.options.fileManager.write = jest.fn());
+      expect.assertions(2);
+
+      return slickCSS.saveSlickCSS(htmlContent).then(() => {
+        expect(slickifyMock).toBeCalledWith(htmlContent);
+        expect(fileManagerMock).toBeCalledWith(usedStyles);
+      });
+    });
+
+    it('should reject with error when file manager is undefined', () => {
+      slickCSS.options.fileManager = undefined;
+      slickCSS.options.errorFn = jest.fn();
+      expect.assertions(1);
+
+      return slickCSS.saveSlickCSS(htmlContent).catch(() => {
+        expect(slickCSS.options.errorFn).toBeCalled();
+      });
+    });
+
+    it('should reject with error when slickify() fails', () => {
+      const errorMsg = 'Some error!';
+      slickCSS.slickify = jest.fn().mockRejectedValue(errorMsg);
+      expect.assertions(1);
+
+      return slickCSS.saveSlickCSS(htmlContent).catch((err) => {
+        expect(err).toBe(errorMsg);
       });
     });
   });
