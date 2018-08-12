@@ -2,6 +2,7 @@
   "name": "express-slick-css",
   "version": "1.0.0",
   "description": "An express middleware which cleans all the unused css in the template and makes the css slick",
+  "main": "index.js",
   "scripts": {
     "test": "jest __tests__",
     "test:watch": "jest --watch",
