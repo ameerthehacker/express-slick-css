@@ -1,5 +1,9 @@
 # Slick CSS :balloon:
 
+[![CircleCI](https://circleci.com/gh/ameerthehacker/express-slick-css/tree/master.svg?style=svg)](https://circleci.com/gh/ameerthehacker/express-slick-css/tree/master)
+[![codecov](https://codecov.io/gh/ameerthehacker/express-slick-css/branch/master/graph/badge.svg)](https://codecov.io/gh/ameerthehacker/express-slick-css)
+[![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
+
 No more bloated CSS styles :poop: in your websites.
 
 ## How it works?
