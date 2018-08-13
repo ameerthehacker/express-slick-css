@@ -101,7 +101,18 @@ describe('slick-css.js', () => {
     let dom;
 
     beforeEach(() => {
-      dom = {};
+      dom = {
+        window: {
+          document: {
+            createElement() {
+              return {
+                setAttribute() {}
+              };
+            },
+            head: { appendChild() {} }
+          }
+        }
+      };
       slickCSS.saveSlickCSS = jest.fn();
     });
 
@@ -112,6 +123,17 @@ describe('slick-css.js', () => {
 
       return slickCSS.addSlickCSS(dom, htmlContent).catch((err) => {
         expect(err).toBe('option outputPath not specified');
+      });
+    });
+
+    it('should add / at end to publicPath if it does not end with /', () => {
+      slickCSS.options.publicPath = 'something';
+
+      slickCSS.saveSlickCSS = jest.fn().mockResolvedValue('path/filename');
+      expect.assertions(1);
+
+      return slickCSS.addSlickCSS(dom, htmlContent).then(() => {
+        expect(slickCSS.options.publicPath).toBeTruthy();
       });
     });
 
@@ -172,16 +194,23 @@ describe('slick-css.js', () => {
   });
 
   describe('saveSlickCSS()', () => {
-    it('should call slickify() with htmlContent, fileManager.write() with styles', () => {
-      const usedStyles = `
+    let usedStyles;
+    let slickifyMock;
+    let fileManagerMock;
+
+    beforeEach(() => {
+      usedStyles = `
       .style1 {
         color: white;
       }
       `;
-      const slickifyMock = (slickCSS.slickify = jest
+      slickifyMock = slickCSS.slickify = jest
         .fn()
-        .mockResolvedValue(usedStyles));
-      const fileManagerMock = (slickCSS.options.fileManager.write = jest.fn());
+        .mockResolvedValue(usedStyles);
+      fileManagerMock = slickCSS.options.fileManager.write = jest.fn();
+    });
+
+    it('should call slickify() with htmlContent, fileManager.write() with styles', () => {
       expect.assertions(2);
 
       return slickCSS.saveSlickCSS(htmlContent).then(() => {
