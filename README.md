@@ -1,12 +1,12 @@
-# Slick CSS
+# Slick CSS :balloon:
 
-Avoid your page from getting bloated by unwanted styles from CSS frameworks.
+No more bloated CSS styles :poop: in your websites.
 
 ## How it works?
 
 1. It intercepts the **res.render** method in the express framework
 2. Strips out all the stylesheets from the html document
-3. Extracts only used styles using [uncss](uncsslink)
+3. Extracts only used styles using [uncss]
 4. Creates a new stylesheet in the path specified(cssPath) and caches it
 5. Adds the newly created stylesheet to the html document
 6. Send the response
@@ -40,12 +40,12 @@ app.use('/', indexRoutes);
 
 ## Options
 
-|   Options    |                          Description                          | Mandatory |      Default Value       |
-| :----------: | :-----------------------------------------------------------: | :-------: | :----------------------: |
-|  outputPath  |            path to save the new slick stylesheets             |    Yes    |           N/A            |
-|   cssPath    |      path to look for stylesheets specified in link tag       |    No     |        outputPath        |
-|  publicPath  | public path for serving css asset `eg. href="/css/style.css"` |    No     |           '/'            |
-| uncssOptions |    Supports all the options provided by [uncss](uncsslink)    |    No     | Refer [uncss](uncsslink) |
+|   Options    |                          Description                          | Mandatory | Default Value |
+| :----------: | :-----------------------------------------------------------: | :-------: | :-----------: |
+|  outputPath  |            path to save the new slick stylesheets             |    Yes    |      N/A      |
+|   cssPath    |      path to look for stylesheets specified in link tag       |    No     |  outputPath   |
+|  publicPath  | public path for serving css asset `eg. href="/css/style.css"` |    No     |      '/'      |
+| uncssOptions |         Supports all the options provided by [uncss]          |    No     | Refer [uncss] |
 
 ## Example
 
@@ -67,7 +67,7 @@ app.use(
 
 ## How to contribute?
 
-Feel free to create an issue for a feature request, bug and you can take up any of those to make a pull request.
+Feel free to create an issue for a feature request, bug and you can take up any of those to make a pull request
 
 Show your support by :star: the repo
 
@@ -75,4 +75,4 @@ Show your support by :star: the repo
 
 MIT © [Ameer Jhan](mailto:ameerjhanprof@gmail.com)
 
-[uncsslink]: https://github.com/uncss/uncss
+[uncss]: https://github.com/uncss/uncss
