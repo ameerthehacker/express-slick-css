@@ -1,3 +1,5 @@
+const chalk = require('chalk').default;
+
 /*eslint no-console: 0*/
 const warnPrefix = 'warn';
 const errorPrefix = 'error';
@@ -5,10 +7,10 @@ const errorPrefix = 'error';
 module.exports = {
   warnPrefix,
   errorPrefix,
-  warn(message) {
-    console.log(`${warnPrefix}: ${message}`);
-  },
   error(message) {
-    console.log(`${errorPrefix}: ${message}`);
+    console.log(chalk.red(`${errorPrefix}: ${message}`));
+  },
+  warn(message) {
+    console.log(chalk.orange(`${warnPrefix}: ${message}`));
   }
 };
