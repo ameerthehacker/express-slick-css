@@ -8,12 +8,11 @@ class SlickCSS {
   }
 
   async slickify(htmlContent) {
-    const { uncssFn, errorFn } = this.options;
+    const { uncssFn } = this.options;
 
     return new Promise((resolve, reject) => {
       if (uncssFn === undefined) {
-        errorFn('option uncssFn not defined');
-        reject();
+        reject('option uncssFn not specified');
 
         return;
       }
@@ -29,11 +28,10 @@ class SlickCSS {
 
   async saveSlickCSS(htmlContent) {
     return new Promise((resolve, reject) => {
-      const { fileManager, errorFn } = this.options;
+      const { fileManager } = this.options;
 
       if (fileManager === undefined) {
-        errorFn('option fileManager not specified');
-        reject();
+        reject('option fileManager not specified');
 
         return;
       }
@@ -66,18 +64,16 @@ class SlickCSS {
 
   async addSlickCSS(dom, htmlContent) {
     return new Promise((resolve, reject) => {
-      const { cssPath, errorFn, publicPath } = this.options;
+      let { outputPath, publicPath } = this.options;
 
-      if (cssPath === undefined) {
-        errorFn('option cssPath not specified');
-        reject();
+      if (outputPath === undefined) {
+        reject('option outputPath not specified');
 
         return;
       }
 
       if (publicPath === undefined) {
-        errorFn('option cssPath not specified');
-        reject();
+        reject('option publicPath not specified');
 
         return;
       }
@@ -86,6 +82,10 @@ class SlickCSS {
         .then((filePath) => {
           const cssFileName = filePath.split(path.sep).pop();
           const slickStyleSheet = dom.window.document.createElement('link');
+
+          if (!publicPath.endsWith('/')) {
+            publicPath += '/';
+          }
 
           slickStyleSheet.setAttribute('href', `${publicPath}${cssFileName}`);
           slickStyleSheet.setAttribute('rel', 'stylesheet');

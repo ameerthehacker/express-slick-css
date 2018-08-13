@@ -7,22 +7,18 @@ class FileManager {
   }
 
   getFilePath(fileContent) {
-    const { cssPath, hashAlgo, hashFn, errorFn } = this.options;
+    const { outputPath, hashAlgo, hashFn } = this.options;
 
-    if (cssPath === undefined) {
-      errorFn('option cssPath not specified');
-
-      return;
+    if (outputPath === undefined) {
+      throw new Error('option outputPath not specified');
     }
 
     if (hashFn == undefined) {
-      errorFn('option hashFn not defined');
-
-      return;
+      throw new Error('option hashFn not specified');
     }
     const contentHash = hashFn(fileContent, hashAlgo);
 
-    return path.join(cssPath, `${contentHash}.css`);
+    return path.join(outputPath, `${contentHash}.css`);
   }
 
   exists(fileContent) {

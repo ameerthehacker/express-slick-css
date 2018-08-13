@@ -12,11 +12,9 @@ describe('slick-css.js', () => {
       uncssOptions: {},
       uncssFn: {},
       errorFn: {},
-      cssPath: 'css',
+      outputPath: 'css',
       publicPath: '/',
-      fileManager: {
-        write() {}
-      }
+      fileManager: { write() {} }
     };
     slickCSS = new SlickCSS(options);
     htmlContent = `
@@ -44,11 +42,10 @@ describe('slick-css.js', () => {
     it('should reject with error when uncssFn is undefined', () => {
       let errorMock;
       slickCSS.options.uncssFn = undefined;
-      slickCSS.options.errorFn = errorMock = jest.fn();
       expect.assertions(1);
 
-      return slickCSS.slickify(htmlContent).catch(() => {
-        expect(errorMock).toBeCalled();
+      return slickCSS.slickify(htmlContent).catch((err) => {
+        expect(err).toBe('option uncssFn not specified');
       });
     });
 
@@ -108,23 +105,22 @@ describe('slick-css.js', () => {
       slickCSS.saveSlickCSS = jest.fn();
     });
 
-    it('should reject with error when cssPath is not given', () => {
+    it('should reject with error when outputPath is not given', () => {
       slickCSS.options.errorFn = jest.fn();
-      slickCSS.options.cssPath = undefined;
+      slickCSS.options.outputPath = undefined;
       expect.assertions(1);
 
-      return slickCSS.addSlickCSS(dom, htmlContent).catch(() => {
-        expect(slickCSS.options.errorFn).toBeCalled();
+      return slickCSS.addSlickCSS(dom, htmlContent).catch((err) => {
+        expect(err).toBe('option outputPath not specified');
       });
     });
 
     it('should reject with error when publicPath is not given', () => {
-      slickCSS.options.errorFn = jest.fn();
       slickCSS.options.publicPath = undefined;
       expect.assertions(1);
 
-      return slickCSS.addSlickCSS(dom, htmlContent).catch(() => {
-        expect(slickCSS.options.errorFn).toBeCalled();
+      return slickCSS.addSlickCSS(dom, htmlContent).catch((err) => {
+        expect(err).toBe('option publicPath not specified');
       });
     });
 
@@ -196,11 +192,10 @@ describe('slick-css.js', () => {
 
     it('should reject with error when file manager is undefined', () => {
       slickCSS.options.fileManager = undefined;
-      slickCSS.options.errorFn = jest.fn();
       expect.assertions(1);
 
-      return slickCSS.saveSlickCSS(htmlContent).catch(() => {
-        expect(slickCSS.options.errorFn).toBeCalled();
+      return slickCSS.saveSlickCSS(htmlContent).catch((err) => {
+        expect(err).toBe('option fileManager not specified');
       });
     });
 

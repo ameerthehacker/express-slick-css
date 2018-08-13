@@ -8,7 +8,7 @@ describe('file-manager.js', () => {
   beforeEach(() => {
     contentHash = 'hash';
     options = {
-      cssPath: 'stylesheets',
+      outputPath: 'stylesheets',
       hashFn: jest.fn().mockReturnValue(contentHash),
       errorFn: jest.fn()
     };
@@ -22,7 +22,7 @@ describe('file-manager.js', () => {
 
   describe('exists()', () => {
     it('should return true if file exists', () => {
-      const fileName = path.join(options.cssPath, `${contentHash}.css`);
+      const fileName = path.join(options.outputPath, `${contentHash}.css`);
 
       fs.existsSync = jest.fn().mockImplementation((path) => {
         if (path === fileName) {
@@ -43,22 +43,24 @@ describe('file-manager.js', () => {
   });
 
   describe('getFilePath()', () => {
-    it('should fail with error when cssPath is not given', () => {
-      options.cssPath = undefined;
+    it('should fail with error when outputPath is not given', () => {
+      options.outputPath = undefined;
 
-      expect(fileManager.getFilePath(fileContent)).toBeUndefined();
-      expect(options.errorFn).toBeCalled();
+      expect(() => {
+        fileManager.getFilePath(fileContent);
+      }).toThrowError('option outputPath not specified');
     });
 
     it('should fail with error when hashFn is not given', () => {
       options.hashFn = undefined;
 
-      expect(fileManager.getFilePath(fileContent)).toBeUndefined();
-      expect(options.errorFn).toBeCalled();
+      expect(() => {
+        fileManager.getFilePath(fileContent);
+      }).toThrowError('option hashFn not specified');
     });
 
     it('should return the correct path', () => {
-      const filePath = path.join(options.cssPath, `${contentHash}.css`);
+      const filePath = path.join(options.outputPath, `${contentHash}.css`);
 
       expect(fileManager.getFilePath(fileContent)).toBe(filePath);
     });

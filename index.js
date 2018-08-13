@@ -6,15 +6,16 @@ const SlickCSS = require('./src/slick-css');
 const uncss = require('uncss');
 
 // Set the best default option for the middleware
-function setDefaultOptions(options) {
+function setDefaultOptions(options = {}) {
+  options.uncssOptions = options.uncssOptions || {};
   options.uncssOptions.htmlroot =
-    options.uncssOptions.htmlroot || options.cssPath;
+    options.uncssOptions.htmlroot || options.cssPath || options.outputPath;
   options.publicPath = options.publicPath || '/';
   options.uncssFn = uncss;
   options.fileManager = new FileManager({
     errorFn: error,
     hashFn: hash,
-    cssPath: options.cssPath
+    outputPath: options.outputPath
   });
   options.errorFn = error;
 
@@ -23,6 +24,7 @@ function setDefaultOptions(options) {
 
 module.exports = (options) => {
   options = setDefaultOptions(options);
+
   const slickCSS = new SlickCSS(options);
 
   return (req, res, next) => {
