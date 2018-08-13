@@ -11,7 +11,8 @@
     "lint:staged": "eslint --fix",
     "pretty": "prettier --write",
     "precommit": "lint-staged",
-    "prepush": "npm run test"
+    "prepush": "npm run test",
+    "publish": "npm publish"
   },
   "lint-staged": {
     "**/*.{md,json}": [
