@@ -35,7 +35,7 @@ npm install express-slick-css --save
 3. Add the middleware before all the routes
 
 ```javascript
-const slickify = require('express-slick-csss');
+const slickify = require('express-slick-css');
 ...
 app.use(slickify(options));
 ...
